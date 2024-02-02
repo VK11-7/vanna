@@ -1,124 +1,381 @@
-import streamlit as st
-from datetime import datetime, timedelta
+import sys
+import time
+from bs4 import BeautifulSoup
+import requests
+import re
 import pandas as pd
-from google.colab import auth
-from google.auth import default
-import gspread
+from io import BytesIO
+import urllib
+from datetime import datetime, timedelta
+import streamlit as st
 
-# Authenticate user
-auth.authenticate_user()
+st.title('Welcome🙏🏻')
+st.header('Simply Ayurveda presents🌿')
+st.subheader('Dainika Almanac🗓️')
 
-# Get credentials
-creds, _ = default()
-
-# Authorize gspread
-gc = gspread.authorize(creds)
-
-# Open the spreadsheet
-worksheet = gc.open('Dainika almanac').sheet1
-
-# Get all values from the worksheet
-rows = worksheet.get_all_values()
-
-# Create a DataFrame
-df = pd.DataFrame.from_records(rows)
-
-# Get today's date
 today = datetime.today()
-
-# Get tomorrow's date
+date1 = today.strftime("%d/%m/%Y")
 tomorrow = today + timedelta(1)
 date1 = tomorrow.strftime("%d/%m/%Y")
 
-# Filter the DataFrame for tomorrow's date
-res = df.loc[df[0] == date1]
+date1=urllib.parse.quote(date1)
 
-# Streamlit app
-st.title("Simply Ayurveda - Dainika Vaidya Almanac")
+page=requests.get('https://www.drikpanchang.com/panchang/day-panchang.html?geoname-id=1277333&date='+date1)
+sheet_url = "https://docs.google.com/spreadsheets/d/1h2rVBV6X2gNg4hRNVFT26DoW-cbOnHEesF2oz9wipDo/export?format=csv"
+response = requests.get(sheet_url)
+df = pd.read_csv(BytesIO(response.content))
 
-# Display the data
-if not res.empty:
-    Date = res[0].values[0]
-    Weekday = res[1].values[0]
-    Sunrise = res[2].values[0]
-    Sunset = res[3].values[0]
-    Moonrise = res[4].values[0]
-    Moonset = res[5].values[0]
-    Samvatsara = res[6].values[0]
-    Ayana = res[7].values[0]
-    Rtu = res[8].values[0]
-    Masa = res[9].values[0]
-    Kollamera = res[10].values[0]
-    Paksha = res[11].values[0]
-    Tithi = res[12].values[0]
-    Vasara = res[13].values[0]
-    Nakshatra = res[14].values[0]
-    Sunsign = res[15].values[0]
-    Moonsign = res[16].values[0]
-    Brahmamuhurta = res[17].values[0]
-    Pratahsandhya = res[18].values[0]
-    Abhijitmuhurta = res[19].values[0]
-    Saayamsandhya = res[20].values[0]
-    Rahukalam = res[21].values[0]
-    Yamaganda = res[22].values[0]
-    Gulikaikaalam = res[23].values[0]
-    Significance = res[24].values[0]
-    Sudhakalainwomen = res[25].values[0]
-    Sudhakalainmen = res[26].values[0]
-    Vishakalainwomen = res[27].values[0]
-    Vishakalainmen = res[28].values[0]
-    Chakrabasedonvasara = res[29].values[0]
-    Bodypartbasedonnakshatra = res[30].values[0]
+df.to_csv('almanac1.csv', index = False)
 
-    # Display the information
-    st.markdown(f"## Suprabhatam")
-    st.markdown(f"{Date} - {Weekday}")
-    st.markdown(f"Sunrise: {Sunrise} am")
-    st.markdown(f"Sunset: {Sunset} pm")
-    st.markdown(f"Moonrise: {Moonrise} pm")
-    st.markdown(f"Moonset: {Moonset} am")
+dd = pd.read_csv('almanac1.csv')
+st.write(dd)
 
-    st.markdown(f"Samvatsara: {Samvatsara}")
-    st.markdown(f"Ayana: {Ayana}")
-    st.markdown(f"Rtu: {Rtu}")
-    st.markdown(f"Masa: {Masa}")
-    st.markdown(f"Kollamera: {Kollamera}")
-    st.markdown(f"Paksha: {Paksha}")
-    st.markdown(f"Tithi: {Tithi}")
-    st.markdown(f"Vasara: {Vasara}")
-    st.markdown(f"Nakshatra: {Nakshatra}")
-    st.markdown(f"Sunsign: {Sunsign}")
-    st.markdown(f"Moonsign: {Moonsign}")
+st.sidebar.header("Almanac Details")
+almanac_form = st.sidebar.form("almanac_form")
+user_date = almanac_form.text_input("Date")
+user_weekday = almanac_form.text_input("Weekday")
+user_sunrise = almanac_form.text_input("Sunrise")
+user_sunset = almanac_form.text_input("Sunset")
+user_moonrise = almanac_form.text_input("Moonrise")
+user_moonset = almanac_form.text_input("Moonset")
+user_samvatsara = almanac_form.text_input("Samvatsara")
+user_ayana = almanac_form.text_input("Ayana")
+user_rtu = almanac_form.text_input("Rtu")
+user_masa = almanac_form.text_input("Masa")
+user_kollamera = almanac_form.text_input("Kollam era")
+user_paksha = almanac_form.text_input("Paksha")
+user_tithi = almanac_form.text_input("Tithi")
+user_vasara = almanac_form.text_input("Vasara")
+user_nakshatra = almanac_form.text_input("Nakshatra")
+user_sunsign = almanac_form.text_input("Sunsign")
+user_moonsign = almanac_form.text_input("Moonsign")
+user_brahmamuhurta = almanac_form.text_input("Brahma muhurta")
+user_pratahsandhya = almanac_form.text_input("Pratah sandhya")
+user_abhijitmuhurta = almanac_form.text_input("Abhijit muhurta")
+user_saayamsandhya = almanac_form.text_input("Saayam sandhya")
+user_rahukalam = almanac_form.text_input("Rahu kalam")
+user_yamaganda = almanac_form.text_input("Yama ganda")
+user_gulikaikaalam = almanac_form.text_input("Gulikai Kaalam")
+user_significance = almanac_form.text_input("Significance")
+user_sudhakalainwomen = almanac_form.text_input("Sudhakala in women")
+user_sudhakalainmen = almanac_form.text_input("Sudhakala in men")
+user_vishakalainwomen = almanac_form.text_input("Vishakala in women")
+user_vishakalainmen = almanac_form.text_input("Vishakala in men")
+user_chakrabasedonvasara = almanac_form.text_input("Chakra based on vasara")
+user_thebodyofkalparushabynakshatra = almanac_form.text_input("The Body of Kal Parusha by Nakshatra")
+add_data = almanac_form.form_submit_button("Update data")
+if add_data:
+  new_data = {"Date": user_date, "Weekday":user_weekday, "Sunrise" :user_sunrise, "Sunset" :user_sunset, "Moonrise" :user_moonrise, "Moonset" :user_moonset, "Samvatsara" :user_samvatsara, "Ayana" :user_ayana, "Rtu" :user_rtu, "Masa" :user_masa, "Kollam era" :user_kollamera, "Paksha" :user_paksha, "Tithi" :user_tithi, "Vasara" :user_vasara, "Nakshatra" :user_nakshatra, "Sunsign" :user_sunsign, "Moonsign" :user_moonrise, "Brahma muhurta" :user_brahmamuhurta, "Pratah sandhya" :user_pratahsandhya, "Abhijit muhurta" :user_abhijitmuhurta, "Saayam sandhya" :user_saayamsandhya, "Rahu kalam" :user_rahukalam, "Yama ganda" :user_yamaganda, "Gulikai Kaalam" :user_yamaganda, "Significance" :user_significance, "Sudhakala in women" :user_sudhakalainwomen, "Sudhakala in men" :user_sudhakalainmen, "Vishakala in women" :user_vishakalainwomen, "Vishakala in men" :user_vishakalainmen, "Chakra based on vasara" :user_chakrabasedonvasara, "The Body of Kal Parusha by Nakshatra" :user_thebodyofkalparushabynakshatra}
+  dd = dd.append(new_data,ignore_index=True)
+  df.to_csv('almanac1.csv',index=False)
 
-    st.markdown(f"## Auspicious Hours")
-    st.markdown(f"Brahma Muhurta: {Brahmamuhurta}")
-    st.markdown(f"Pratah Sandhya: {Pratahsandhya}")
-    st.markdown(f"Abhijit Muhurta: {Abhijitmuhurta}")
-    st.markdown(f"Saayam Sandhya: {Saayamsandhya}")
 
-    st.markdown(f"## Hours to Be Careful Around")
-    st.markdown(f"Rahu Kalam: {Rahukalam}")
-    st.markdown(f"Yama Gandha: {Yamaganda}")
-    st.markdown(f"Gulikai Kaalam: {Gulikaikaalam}")
+soup=BeautifulSoup(page.text,'html.parser')
 
-    st.markdown(f"## Significance")
-    st.markdown(Significance)
+res = dd.loc[df['Date'] == date1]
 
-    st.markdown(f"## Medicoastrological Significance")
-    st.markdown(f"Sudhakala in Women: {Sudhakalainwomen}")
-    st.markdown(f"Sudhakala in Men: {Sudhakalainmen}")
-    st.markdown(f"Vishakala in Women: {Vishakalainwomen}")
-    st.markdown(f"Vishakala in Men: {Vishakalainmen}")
-    st.markdown(f"Chakra Based on Vasara: {Chakrabasedonvasara}")
+l12 = soup.find('div',class_='dpPHeaderRightContent')
 
-    st.markdown(f"## Body of Kala Purusha According to Nakshatra")
-    st.markdown(Bodypartbasedonnakshatra)
+a1 = {}
+a1['Weekday'] = l12.span.text
 
-    st.markdown(
-        f"Have we missed anything important? Message Simply Ayurveda on WhatsApp. [WhatsApp](https://wa.me/message/DTX6RK5L6HE3B1)"
-    )
-    st.markdown(
-        f"Subscribe to our YouTube channel - [Simply Ayurveda](https://youtube.com/c/SimplyAyurveda)"
-    )
-else:
-    st.warning("No data found for tomorrow's date.")
+l1 = soup.find('h2',class_='dpPageShortTitle')
+
+a={}
+a['Date'] = l1.text
+
+Masa = res['Masa'].values[0]
+print(Masa)
+
+Kollamera = res['Kollam era'].values[0]
+print(Kollamera)
+
+l13 = soup.find('div',class_='dpPHeaderEventList')
+
+c={}
+c['Significance'] = l13.text.replace("\xa0","")
+
+l2 = soup.find('div',class_='dpSunriseMoonriseCardWrapper').find_all('div',class_='dpTableCell')
+
+d={}
+for i,j in zip(range(0,len(l2), 4), range(1, len(l2),4)):
+  if l2[i].text!='' and l2[i].text!=' ':
+    temp = l2[i].text
+    d[temp] = l2[j].text.replace("ⓘ","")
+  else:
+    d[temp] = d[temp] + " " + l2[j].text.replace("ⓘ","")
+
+f={}
+for i,j in zip(range(2,len(l2), 4), range(3, len(l2),4)):
+  if l2[i].text!='' and l2[i].text!=' ':
+    temp = l2[i].text
+    f[temp] = l2[j].text.replace("ⓘ","")
+  else:
+    f[temp] = f[temp] + " " + l2[j].text.replace("ⓘ","")
+
+l3 = soup.find('div',class_='dpCorePanchangCardWrapper').find_all('div',class_='dpTableCell')
+
+e={}
+for i,j in zip(range(0,len(l3), 4), range(1, len(l3),4)):
+  if l3[i].text!='' and l3[i].text!=' ':
+    temp = l3[i].text
+    e[temp] = l3[j].text.replace("ⓘ","")
+  else:
+    e[temp] = e[temp] + " " + l3[j].text.replace("ⓘ","")
+
+g={}
+for i,j in zip(range(2,len(l3), 4), range(3, len(l3),4)):
+  if l3[i].text!='' and l3[i].text!=' ':
+    temp = l3[i].text
+    g[temp] = l3[j].text.replace("ⓘ","")
+  else:
+    g[temp] = g[temp] + " " + l3[j].text.replace("ⓘ","")
+
+l4 = soup.find('div',class_='dpLunarDateCardWrapper').find_all('div',class_='dpTableCell')
+
+h={}
+for i,j in zip(range(0,len(l4), 4), range(1, len(l4),4)):
+  if l4[i].text!='' and l4[i].text!=' ':
+    temp = l4[i].text
+    h[temp] = l4[j].text.replace("ⓘ","")
+  else:
+    h[temp] = h[temp] + " " + l4[j].text.replace("ⓘ","")
+
+k={}
+for i,j in zip(range(2,len(l4), 4), range(3, len(l4),4)):
+  if l4[i].text!='' and l4[i].text!=' ':
+    temp = l4[i].text
+    k[temp] = l4[j].text.replace("ⓘ","")
+  else:
+    k[temp] = k[temp] + " " + l4[j].text.replace("ⓘ","")
+
+l5 = soup.find('div',class_='dpRashiNakshatraCardWrapper').find_all('div',class_='dpTableCell')
+
+l={}
+for i,j in zip(range(0,len(l5), 4), range(1, len(l5),4)):
+  if l5[i].text!='' and l5[i].text!=' ':
+    temp = l5[i].text
+    l[temp] = l5[j].text.replace("ⓘ","")
+  else:
+    l[temp] = l[temp] + " " + l5[j].text.replace("ⓘ","")
+
+m={}
+for i,j in zip(range(2,len(l5), 4), range(3, len(l5),4)):
+  if l5[i].text!='' and l5[i].text!=' ':
+    temp = l5[i].text
+    m[temp] = l5[j].text.replace("ⓘ","")
+  else:
+    m[temp] = m[temp] + " " + l5[j].text.replace("ⓘ","")
+
+l6 = soup.find('div',class_='dpAyanaRituCardWrapper').find_all('div',class_='dpTableCell')
+
+n={}
+for i,j in zip(range(0,len(l6), 4), range(1, len(l6),4)):
+  if l6[i].text!='' and l6[i].text!=' ':
+    temp = l6[i].text
+    n[temp] = l6[j].text.replace("ⓘ","")
+  else:
+    n[temp] = n[temp] + " " + l6[j].text.replace("ⓘ","")
+
+o={}
+for i,j in zip(range(2,len(l6), 4), range(3, len(l6),4)):
+  if l6[i].text!='' and l6[i].text!=' ':
+    temp = l6[i].text
+    o[temp] = l6[j].text.replace("ⓘ","")
+  else:
+    o[temp] = o[temp] + " " + l6[j].text.replace("ⓘ","")
+
+l7 = soup.find('div',class_='dpAuspiciousCardWrapper').find_all('div',class_='dpTableCell')
+
+p={}
+for i,j in zip(range(0,len(l7), 4), range(1, len(l7),4)):
+  if l7[i].text!='' and l7[i].text!=' ':
+    temp = l7[i].text
+    p[temp] = l7[j].text.replace("ⓘ","")
+  else:
+    p[temp] = p[temp] + " " + l7[j].text.replace("ⓘ","")
+
+q={}
+for i,j in zip(range(2,len(l7), 4), range(3, len(l7),4)):
+  if l7[i].text!='' and l7[i].text!=' ':
+    temp = l7[i].text
+    q[temp] = l7[j].text.replace("ⓘ","")
+  else:
+    q[temp] = q[temp] + " " + l7[j].text.replace("ⓘ","")
+
+l8 = soup.find('div',class_='dpInauspiciousCardWrapper').find_all('div',class_='dpTableCell')
+
+r={}
+for i,j in zip(range(0,len(l8), 4), range(1, len(l8),4)):
+  if l8[i].text!='' and l8[i].text!=' ':
+    temp = l8[i].text
+    r[temp] = l8[j].text.replace("ⓘ","")
+  else:
+    r[temp] = r[temp] + " " + l8[j].text.replace("ⓘ","")
+
+s={}
+for i,j in zip(range(2,len(l8), 4), range(3, len(l8),4)):
+  if l8[i].text!='' and l8[i].text!=' ':
+    temp = l8[i].text
+    s[temp] = l8[j].text.replace("ⓘ","")
+  else:
+    s[temp] = s[temp] + " " + l8[j].text.replace("ⓘ","")
+
+l9 = soup.find('div',class_='dpTamilYogaCardWrapper').find_all('div',class_='dpTableCell')
+
+t={}
+for i,j in zip(range(0,len(l9), 4), range(1, len(l9),4)):
+  if l9[i].text!='' and l9[i].text!=' ':
+    temp = l9[i].text
+    t[temp] = l9[j].text.replace("ⓘ","")
+  else:
+    t[temp] = t[temp] + " " + l9[j].text.replace("ⓘ","")
+
+u={}
+for i,j in zip(range(2,len(l9), 4), range(3, len(l9),4)):
+  if l9[i].text!='' and l9[i].text!=' ':
+    temp = l9[i].text
+    u[temp] = l9[j].text.replace("ⓘ","")
+  else:
+    u[temp] = u[temp] + " " + l9[j].text.replace("ⓘ","")
+
+l10 = soup.find('div',class_='dpNivasaShoolaCardWrapper').find_all('div',class_='dpTableCell')
+
+v={}
+for i,j in zip(range(0,len(l10), 4), range(1, len(l10),4)):
+  if l10[i].text!='' and l10[i].text!=' ':
+    temp = l10[i].text
+    v[temp] = l10[j].text.replace("ⓘ","")
+  else:
+    v[temp] = v[temp] + " " + l10[j].text.replace("ⓘ","")
+
+w={}
+for i,j in zip(range(2,len(l10), 4), range(3, len(l10),4)):
+  if l10[i].text!='' and l10[i].text!=' ':
+    temp = l10[i].text
+    w[temp] = l10[j].text.replace("ⓘ","")
+  else:
+    w[temp] = w[temp] + " " + l10[j].text.replace("ⓘ","")
+
+l11 = soup.find('div',class_='dpCalendarEpochCardWrapper').find_all('div',class_='dpTableCell')
+
+x={}
+for i,j in zip(range(0,len(l11), 4), range(1, len(l11),4)):
+  if l11[i].text!='' and l11[i].text!=' ':
+    temp = l11[i].text
+    x[temp] = l11[j].text.replace("ⓘ","")
+  else:
+    x[temp] = x[temp] + " " + l11[j].text.replace("ⓘ","")
+
+y={}
+for i,j in zip(range(2,len(l11), 4), range(3, len(l11),4)):
+  if l11[i].text!='' and l11[i].text!=' ':
+    temp = l11[i].text
+    y[temp] = l11[j].text.replace("ⓘ","")
+  else:
+    y[temp] = y[temp] + " " + l11[j].text.replace("ⓘ","")
+
+Sudhakalainwomen = res['Sudhakala in women'].values[0]
+
+Sudhakalainmen = res['Sudhakala in men'].values[0]
+
+Vishakalainwomen = res['Vishakala in women'].values[0]
+
+Vishakalainmen = res['Vishakala in men'].values[0]
+
+Chakrabasedonvasara = res['Chakra based on vasara'].values[0]
+
+Bodypartbasedonnakshatra = res['The Body of Kal Parusha by Nakshatra'].values[0]
+
+Date=a['Date']
+Weekday=a1['Weekday']
+Sunrise=d['Sunrise']
+Sunset=f['Sunset']
+Moonrise=d['Moonrise']
+Moonset=f['Moonset']
+Samvatsara=h['Shaka Samvat']
+Ayana=n['Drik Ayana']
+Ritu=n['Drik Ritu']
+Masa=Masa
+Kollamera=Kollamera
+Paksha=e['Paksha']
+Tithi=e['Tithi']
+Vasara=e['Weekday']
+Nakshatra=g['Nakshatra']
+Sunsign=l['Sunsign']
+Moonsign=l['Moonsign']
+Brahmamuhurta=p['Brahma Muhurta']
+Pratahsandhya=q['Pratah Sandhya']
+Abhijitmuhurta=p['Abhijit']
+Saayamsandhya=q['Sayahna Sandhya']
+Rahukalam=r['Rahu Kalam']
+Yamaganda=s['Yamaganda']
+Gulikaikaalam=r['Gulikai Kalam']
+Significance=c['Significance']
+Sudhakalainwomen=Sudhakalainwomen
+Sudhakalainmen=Sudhakalainmen
+Vishakalainwomen=Vishakalainwomen
+Vishakalainmen=Vishakalainmen
+Chakrabasedonvasara=Chakrabasedonvasara
+Bodypartbasedonnakshatra=Bodypartbasedonnakshatra
+
+message = """
+Simply Ayurveda - Dainika Vaidya Almanac
+
+✨ Suprabhatam ✨
+
+{Date}
+{Weekday}
+
+☀️ Sunrise – {Sunrise}
+🌇 Sunset – {Sunset}
+🌒 Moonrise – {Moonrise}
+🌃 Moonset – {Moonset}
+
+Samvatsara – {Samvatsara}
+Ayana - {Ayana}
+Ritu – {Ritu}
+Masa - {Masa}
+Kollam era – {Kollamera}
+Paksha – {Paksha}
+Tithi – {Tithi}
+Vasara – {Vasara}
+Nakshatra – {Nakshatra}
+Sunsign – {Sunsign}
+Moonsign – {Moonsign}
+
+✨ Auspicious hours -✨
+🪷 Brahma muhurta – {Brahmamuhurta}
+🌼 Pratah sandhya – {Pratahsandhya}
+🌸 Abhijit muhurta – {Abhijitmuhurta}
+🌼 Saayam sandhya – {Saayamsandhya}
+
+🛑 Hours to be careful around
+❌Rahu kalam – {Rahukalam}
+‼️Yama ganda – {Yamaganda}
+💊Gulikai Kaalam – {Gulikaikaalam}
+
+Significance – {Significance}
+
+🩺✡️ Medicoastrological significance -
+Sudhakala in women – {Sudhakalainwomen}🚺
+Sudhakala in men – {Sudhakalainmen}🚹
+Vishakala in women – {Vishakalainwomen}🦳
+Vishakala in men – {Vishakalainmen}🧔🏻‍♂
+Chakra based on vasara – {Chakrabasedonvasara}
+
+Body of Kala Purusha according to Nakshatra –
+
+{Bodypartbasedonnakshatra}
+
+Have we missed anything important?
+Message Simply Ayurveda on WhatsApp. https://wa.me/message/DTX6RK5L6HE3B1
+Subscribe to our YouTube channel - https://youtube.com/c/SimplyAyurveda
+"""
+
+msg = message.format(Date=Date, Weekday=Weekday, Sunrise=Sunrise, Sunset=Sunset, Moonrise=Moonrise, Moonset=Moonset, Samvatsara=Samvatsara, Ayana=Ayana, Ritu=Ritu, Masa=Masa, Kollamera=Kollamera, Paksha=Paksha, Tithi=Tithi, Vasara=Vasara, Nakshatra=Nakshatra, Sunsign=Sunsign, Moonsign=Moonsign, Brahmamuhurta=Brahmamuhurta, Pratahsandhya=Pratahsandhya, Abhijitmuhurta=Abhijitmuhurta, Saayamsandhya=Saayamsandhya, Rahukalam=Rahukalam, Yamaganda=Yamaganda, Gulikaikaalam=Gulikaikaalam, Significance=Significance, Sudhakalainwomen=Sudhakalainwomen, Sudhakalainmen=Sudhakalainmen, Vishakalainwomen=Vishakalainwomen, Vishakalainmen=Vishakalainmen, Chakrabasedonvasara=Chakrabasedonvasara, Bodypartbasedonnakshatra=Bodypartbasedonnakshatra)
+
+st.code(msg)
+
+st.subheader("Thank You!😊")
+st.write('©️ VK 2024')
