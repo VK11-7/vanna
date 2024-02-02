@@ -17,16 +17,11 @@ st.subheader('Dainika Almanac🗓️')
 today = datetime.today()
 date1 = today.strftime("%d/%m/%Y")
 tomorrow = today + timedelta(1)
-date2 = tomorrow.strftime("%d/%m/%Y")
+date1 = tomorrow.strftime("%d/%m/%Y")
 
 date1=urllib.parse.quote(date1)
-date2=urllib.parse.quote(date2)
-page=''
-if st.button("Today's Almanac"):
-  page=requests.get('https://www.drikpanchang.com/panchang/day-panchang.html?geoname-id=1277333&date='+date1)
-if st.button("Tomorrow's Almanac"):
-  page=requests.get('https://www.drikpanchang.com/panchang/day-panchang.html?geoname-id=1277333&date='+date2)
 
+page=requests.get('https://www.drikpanchang.com/panchang/day-panchang.html?geoname-id=1277333&date='+date1)
 sheet_url = "https://docs.google.com/spreadsheets/d/1h2rVBV6X2gNg4hRNVFT26DoW-cbOnHEesF2oz9wipDo/export?format=csv"
 response = requests.get(sheet_url)
 df = pd.read_csv(BytesIO(response.content))
