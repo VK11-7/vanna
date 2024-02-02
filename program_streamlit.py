@@ -21,7 +21,7 @@ date2 = tomorrow.strftime("%d/%m/%Y")
 
 date1=urllib.parse.quote(date1)
 date2=urllib.parse.quote(date2)
-
+page=''
 if st.button("Today's Almanac"):
   page=requests.get('https://www.drikpanchang.com/panchang/day-panchang.html?geoname-id=1277333&date='+date1)
 if st.button("Tomorrow's Almanac"):
