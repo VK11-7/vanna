@@ -66,7 +66,6 @@ notebook==7.0.6
 notebook_shim==0.2.3
 numpy==1.26.2
 overrides==7.4.0
-os0==2.0.1
 packaging==23.2
 pandas==2.1.4
 pandocfilters==1.5.0
