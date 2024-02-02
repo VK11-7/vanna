@@ -8,7 +8,7 @@ from io import BytesIO
 import urllib
 from datetime import datetime, timedelta
 import streamlit as st
-import pywhatkit
+#import pywhatkit
 
 st.title('Welcome🙏🏻')
 st.header('Simply Ayurveda presents🌿')
@@ -378,11 +378,11 @@ msg = message.format(Date=Date, Weekday=Weekday, Sunrise=Sunrise, Sunset=Sunset,
 
 st.code(msg)
 
-if st.button('Send WhatsApp Message'):
-  pywhatkit.sendwhatmsg_instantly(
-      phone_no="+919360871557", 
-      message=msg,
-  )
+# if st.button('Send WhatsApp Message'):
+#   pywhatkit.sendwhatmsg_instantly(
+#       phone_no="+919360871557", 
+#       message=msg,
+#   )
 
 st.subheader("Thank You!😊")
 st.write('©️ VK 2024')
