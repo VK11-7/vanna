@@ -29,8 +29,6 @@ df = pd.read_csv(BytesIO(response.content))
 df.to_csv('almanac1.csv', index = False)
 
 dd = pd.read_csv('almanac1.csv')
-
-st.data_editor(dd, key="new_row", num_rows="dynamic")
 st.write(dd)
 
 # st.sidebar.header("Almanac Details")
