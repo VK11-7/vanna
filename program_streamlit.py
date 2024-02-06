@@ -8,7 +8,7 @@ from io import BytesIO
 import urllib
 from datetime import datetime, timedelta
 import streamlit as st
-import pywhatkit
+#import pywhatkit
 
 st.title('Welcome🙏🏻')
 st.header('Simply Ayurveda presents🌿')
@@ -29,46 +29,48 @@ df = pd.read_csv(BytesIO(response.content))
 df.to_csv('almanac1.csv', index = False)
 
 dd = pd.read_csv('almanac1.csv')
+
+st.data_editor(dd, key="new_row", num_rows="dynamic")
 st.write(dd)
 
-st.sidebar.header("Almanac Details")
-almanac_form = st.sidebar.form("almanac_form")
-user_date = almanac_form.text_input("Date")
-user_weekday = almanac_form.text_input("Weekday")
-user_sunrise = almanac_form.text_input("Sunrise")
-user_sunset = almanac_form.text_input("Sunset")
-user_moonrise = almanac_form.text_input("Moonrise")
-user_moonset = almanac_form.text_input("Moonset")
-user_samvatsara = almanac_form.text_input("Samvatsara")
-user_ayana = almanac_form.text_input("Ayana")
-user_rtu = almanac_form.text_input("Rtu")
-user_masa = almanac_form.text_input("Masa")
-user_kollamera = almanac_form.text_input("Kollam era")
-user_paksha = almanac_form.text_input("Paksha")
-user_tithi = almanac_form.text_input("Tithi")
-user_vasara = almanac_form.text_input("Vasara")
-user_nakshatra = almanac_form.text_input("Nakshatra")
-user_sunsign = almanac_form.text_input("Sunsign")
-user_moonsign = almanac_form.text_input("Moonsign")
-user_brahmamuhurta = almanac_form.text_input("Brahma muhurta")
-user_pratahsandhya = almanac_form.text_input("Pratah sandhya")
-user_abhijitmuhurta = almanac_form.text_input("Abhijit muhurta")
-user_saayamsandhya = almanac_form.text_input("Saayam sandhya")
-user_rahukalam = almanac_form.text_input("Rahu kalam")
-user_yamaganda = almanac_form.text_input("Yama ganda")
-user_gulikaikaalam = almanac_form.text_input("Gulikai Kaalam")
-user_significance = almanac_form.text_input("Significance")
-user_sudhakalainwomen = almanac_form.text_input("Sudhakala in women")
-user_sudhakalainmen = almanac_form.text_input("Sudhakala in men")
-user_vishakalainwomen = almanac_form.text_input("Vishakala in women")
-user_vishakalainmen = almanac_form.text_input("Vishakala in men")
-user_chakrabasedonvasara = almanac_form.text_input("Chakra based on vasara")
-user_thebodyofkalparushabynakshatra = almanac_form.text_input("The Body of Kal Parusha by Nakshatra")
-add_data = almanac_form.form_submit_button("Update data")
-if add_data:
-  new_data = {"Date": user_date, "Weekday":user_weekday, "Sunrise" :user_sunrise, "Sunset" :user_sunset, "Moonrise" :user_moonrise, "Moonset" :user_moonset, "Samvatsara" :user_samvatsara, "Ayana" :user_ayana, "Rtu" :user_rtu, "Masa" :user_masa, "Kollam era" :user_kollamera, "Paksha" :user_paksha, "Tithi" :user_tithi, "Vasara" :user_vasara, "Nakshatra" :user_nakshatra, "Sunsign" :user_sunsign, "Moonsign" :user_moonrise, "Brahma muhurta" :user_brahmamuhurta, "Pratah sandhya" :user_pratahsandhya, "Abhijit muhurta" :user_abhijitmuhurta, "Saayam sandhya" :user_saayamsandhya, "Rahu kalam" :user_rahukalam, "Yama ganda" :user_yamaganda, "Gulikai Kaalam" :user_yamaganda, "Significance" :user_significance, "Sudhakala in women" :user_sudhakalainwomen, "Sudhakala in men" :user_sudhakalainmen, "Vishakala in women" :user_vishakalainwomen, "Vishakala in men" :user_vishakalainmen, "Chakra based on vasara" :user_chakrabasedonvasara, "The Body of Kal Parusha by Nakshatra" :user_thebodyofkalparushabynakshatra}
-  dd = dd.append(new_data,ignore_index=True)
-  df.to_csv('almanac1.csv',index=False)
+# st.sidebar.header("Almanac Details")
+# almanac_form = st.sidebar.form("almanac_form")
+# user_date = almanac_form.text_input("Date")
+# user_weekday = almanac_form.text_input("Weekday")
+# user_sunrise = almanac_form.text_input("Sunrise")
+# user_sunset = almanac_form.text_input("Sunset")
+# user_moonrise = almanac_form.text_input("Moonrise")
+# user_moonset = almanac_form.text_input("Moonset")
+# user_samvatsara = almanac_form.text_input("Samvatsara")
+# user_ayana = almanac_form.text_input("Ayana")
+# user_rtu = almanac_form.text_input("Rtu")
+# user_masa = almanac_form.text_input("Masa")
+# user_kollamera = almanac_form.text_input("Kollam era")
+# user_paksha = almanac_form.text_input("Paksha")
+# user_tithi = almanac_form.text_input("Tithi")
+# user_vasara = almanac_form.text_input("Vasara")
+# user_nakshatra = almanac_form.text_input("Nakshatra")
+# user_sunsign = almanac_form.text_input("Sunsign")
+# user_moonsign = almanac_form.text_input("Moonsign")
+# user_brahmamuhurta = almanac_form.text_input("Brahma muhurta")
+# user_pratahsandhya = almanac_form.text_input("Pratah sandhya")
+# user_abhijitmuhurta = almanac_form.text_input("Abhijit muhurta")
+# user_saayamsandhya = almanac_form.text_input("Saayam sandhya")
+# user_rahukalam = almanac_form.text_input("Rahu kalam")
+# user_yamaganda = almanac_form.text_input("Yama ganda")
+# user_gulikaikaalam = almanac_form.text_input("Gulikai Kaalam")
+# user_significance = almanac_form.text_input("Significance")
+# user_sudhakalainwomen = almanac_form.text_input("Sudhakala in women")
+# user_sudhakalainmen = almanac_form.text_input("Sudhakala in men")
+# user_vishakalainwomen = almanac_form.text_input("Vishakala in women")
+# user_vishakalainmen = almanac_form.text_input("Vishakala in men")
+# user_chakrabasedonvasara = almanac_form.text_input("Chakra based on vasara")
+# user_thebodyofkalparushabynakshatra = almanac_form.text_input("The Body of Kal Parusha by Nakshatra")
+# add_data = almanac_form.form_submit_button("Update data")
+# if add_data:
+#   new_data = {"Date": user_date, "Weekday":user_weekday, "Sunrise" :user_sunrise, "Sunset" :user_sunset, "Moonrise" :user_moonrise, "Moonset" :user_moonset, "Samvatsara" :user_samvatsara, "Ayana" :user_ayana, "Rtu" :user_rtu, "Masa" :user_masa, "Kollam era" :user_kollamera, "Paksha" :user_paksha, "Tithi" :user_tithi, "Vasara" :user_vasara, "Nakshatra" :user_nakshatra, "Sunsign" :user_sunsign, "Moonsign" :user_moonrise, "Brahma muhurta" :user_brahmamuhurta, "Pratah sandhya" :user_pratahsandhya, "Abhijit muhurta" :user_abhijitmuhurta, "Saayam sandhya" :user_saayamsandhya, "Rahu kalam" :user_rahukalam, "Yama ganda" :user_yamaganda, "Gulikai Kaalam" :user_yamaganda, "Significance" :user_significance, "Sudhakala in women" :user_sudhakalainwomen, "Sudhakala in men" :user_sudhakalainmen, "Vishakala in women" :user_vishakalainwomen, "Vishakala in men" :user_vishakalainmen, "Chakra based on vasara" :user_chakrabasedonvasara, "The Body of Kal Parusha by Nakshatra" :user_thebodyofkalparushabynakshatra}
+#   dd = dd.append(new_data,ignore_index=True)
+#   df.to_csv('almanac1.csv',index=False)
 
 
 soup=BeautifulSoup(page.text,'html.parser')
@@ -378,11 +380,11 @@ msg = message.format(Date=Date, Weekday=Weekday, Sunrise=Sunrise, Sunset=Sunset,
 
 st.code(msg)
 
-if st.button('Send WhatsApp Message'):
-  pywhatkit.sendwhatmsg_instantly(
-      phone_no="+919360871557", 
-      message=msg,
-  )
+# if st.button('Send WhatsApp Message'):
+#   pywhatkit.sendwhatmsg_instantly(
+#       phone_no="+919360871557", 
+#       message=msg,
+#   )
 
 st.subheader("Thank You!😊")
 st.write('©️ VK 2024')
