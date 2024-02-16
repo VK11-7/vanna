@@ -27,8 +27,6 @@ if st.button("Today's Almanac"):
   df.to_csv('almanac1.csv', index = False)
 
   dd = pd.read_csv('almanac1.csv')
-  if st.button("View Almanac datasheet"):
-    st.write(dd)
 
   # st.sidebar.header("Almanac Details")
   # almanac_form = st.sidebar.form("almanac_form")
@@ -376,6 +374,7 @@ Subscribe to our YouTube channel - https://youtube.com/c/SimplyAyurveda
   msg = message.format(Date=Date, Weekday=Weekday, Sunrise=Sunrise, Sunset=Sunset, Moonrise=Moonrise, Moonset=Moonset, Samvatsara=Samvatsara, Ayana=Ayana, Ritu=Ritu, Masa=Masa, Kollamera=Kollamera, Paksha=Paksha, Tithi=Tithi, Vasara=Vasara, Nakshatra=Nakshatra, Sunsign=Sunsign, Moonsign=Moonsign, Brahmamuhurta=Brahmamuhurta, Pratahsandhya=Pratahsandhya, Abhijitmuhurta=Abhijitmuhurta, Saayamsandhya=Saayamsandhya, Rahukalam=Rahukalam, Yamaganda=Yamaganda, Gulikaikaalam=Gulikaikaalam, Significance=Significance, Sudhakalainwomen=Sudhakalainwomen, Sudhakalainmen=Sudhakalainmen, Vishakalainwomen=Vishakalainwomen, Vishakalainmen=Vishakalainmen, Chakrabasedonvasara=Chakrabasedonvasara, Bodypartbasedonnakshatra=Bodypartbasedonnakshatra)
 
   st.code(msg)
+  st.write(dd)
 
   # if st.button('Send WhatsApp Message'):
   #   pywhatkit.sendwhatmsg_instantly(
@@ -399,8 +398,6 @@ if st.button("Tomorrow's Almanac"):
   df.to_csv('almanac1.csv', index = False)
 
   dd = pd.read_csv('almanac1.csv')
-  if st.button("View Almanac datasheet"):
-    st.write(dd)
 
   # st.sidebar.header("Almanac Details")
   # almanac_form = st.sidebar.form("almanac_form")
@@ -748,11 +745,12 @@ Subscribe to our YouTube channel - https://youtube.com/c/SimplyAyurveda
   msg = message.format(Date=Date, Weekday=Weekday, Sunrise=Sunrise, Sunset=Sunset, Moonrise=Moonrise, Moonset=Moonset, Samvatsara=Samvatsara, Ayana=Ayana, Ritu=Ritu, Masa=Masa, Kollamera=Kollamera, Paksha=Paksha, Tithi=Tithi, Vasara=Vasara, Nakshatra=Nakshatra, Sunsign=Sunsign, Moonsign=Moonsign, Brahmamuhurta=Brahmamuhurta, Pratahsandhya=Pratahsandhya, Abhijitmuhurta=Abhijitmuhurta, Saayamsandhya=Saayamsandhya, Rahukalam=Rahukalam, Yamaganda=Yamaganda, Gulikaikaalam=Gulikaikaalam, Significance=Significance, Sudhakalainwomen=Sudhakalainwomen, Sudhakalainmen=Sudhakalainmen, Vishakalainwomen=Vishakalainwomen, Vishakalainmen=Vishakalainmen, Chakrabasedonvasara=Chakrabasedonvasara, Bodypartbasedonnakshatra=Bodypartbasedonnakshatra)
 
   st.code(msg)
-
+  st.write(dd)
   # if st.button('Send WhatsApp Message'):
   #   pywhatkit.sendwhatmsg_instantly(
   #       phone_no="+919360871557", 
   #       message=msg,
   #   )
+
 st.subheader("Thank You!😊")
 st.write('©️ VK 2024')
